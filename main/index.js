@@ -4,10 +4,6 @@ const isDev = process.env.APP_DEV ? (process.env.APP_DEV.trim() == "true") : fal
 
 var mainWindow;
 
-if (require('electron-squirrel-startup')) {
-	app.quit();
-}
-
 const createWindow = () => {
 	mainWindow = new BrowserWindow({
 		width: 1200,

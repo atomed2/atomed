@@ -16,9 +16,6 @@
 		"build-electron": "electron-forge package",
 		"make-electron": "electron-forge make"
 	},
-	"dependencies": {
-		"electron-squirrel-startup": "^1.0.0"
-	},
 	"devDependencies": {
 		"@sveltejs/vite-plugin-svelte": "^1.0.0-next.30",
 		"concurrently": "^7.2.2",
