@@ -1,0 +1,30 @@
+@import url('./normalize.css');
+
+:root {
+	font-size: 16px;
+
+	/* Normal Colors */
+	--fg: #FFF;
+	--bg: #222;
+
+	/* Tab Panel & Tabs */
+	--tab-fg: #E0E0E0;
+	--tab-panel-bg: #111;
+	--tab-selected-border: #00aeff;
+	--tab-selected-bg: #333;
+	--tab-close: #FF7070;
+	--tab-close-hover: #FF0000;
+}
+
+body, html {
+	width: 100vw;
+	height: 100vh;
+	color: var(--fg);
+	background-color: var(--bg);
+}
+
+#app {
+	display: block;
+	height: 100%;
+	width: 100%;
+}
