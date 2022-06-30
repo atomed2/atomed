@@ -1,26 +1,23 @@
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
+# Developer tools' files
+.lite_workspace.lua
 
-node_modules
-frontend-dist
-out
+# Neutralinojs binaries and builds
+bin
 dist
-dist-ssr
-*.local
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
+# Neutralinojs client (minified)
+neutralino.js
+
+# Neutralinojs related files
+.storage
+*.log
+
+# Rollup Builds
+www/build
+
+# NodeJs Deps
+node_modules/
+
+# Junk Files
 .DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+.tmp

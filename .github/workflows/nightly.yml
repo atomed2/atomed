@@ -4,76 +4,25 @@ on:
     branches: [ master ]
 
 jobs:
-  Build-Linux:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout v3
-      uses: actions/checkout@v3
-
-    - name: Setup NodeJs
-      uses: actions/setup-node@v3
-      with:
-        node-version: 16
-        #cache: 'npm'
-
-    - name: Install Deps
-      run: npm ci
-
-    - name: Build
-      run: npm run make-electron
-
-    - name: Upload Artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: linux_zip
-        path: out/make/zip/linux/x64/*.zip
-        if-no-files-found: error
-
-  Build-Windows:
-    runs-on: windows-latest
-    steps:
-    - name: Checkout v3
-      uses: actions/checkout@v3
-
-    - name: Setup NodeJs
-      uses: actions/setup-node@v3
-      with:
-        node-version: 16
-        #cache: 'npm'
-
-    - name: Install Deps
-      run: npm ci
-
-    - name: Build
-      run: npm run make-electron
-
-    - name: Upload Artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: windows_zip
-        path: out/make/zip/win32/x64/*.zip
-        if-no-files-found: error
-
   Create-Release:
-    needs: [Build-Windows, Build-Linux]
     runs-on: ubuntu-latest
     steps:
     - name: Checkout v3
       uses: actions/checkout@v3
 
-    - name: Download Linux Zip
-      uses: actions/download-artifact@v2
+    - name: Setup NodeJs
+      uses: actions/setup-node@v3
       with:
-        name: linux_zip
-        path: ./build/
+        node-version: 16
+        #cache: 'npm'
 
-    - name: Download Windows Zip
-      uses: actions/download-artifact@v2
-      with:
-        name: windows_zip
-        path: ./build/
+    - name: Install Deps
+      run: npm ci
 
-    - name: Update/Create Nightly Release
+    - name: Build
+      run: npm run build
+
+    - name: Update/Create Continous Release
       uses: "marvinpinto/action-automatic-releases@latest"
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
@@ -81,4 +30,5 @@ jobs:
         prerelease: false
         title: "Atom2 Nightly"
         files: |
-          ./build/
+          ./dist/atom2-release.zip
+
