@@ -4,7 +4,7 @@ const isDev = process.env.APP_DEV ? (process.env.APP_DEV.trim() == "true") : fal
 
 var mainWindow;
 
-const createWindow = () => {
+function createWindow() {
 	mainWindow = new BrowserWindow({
 		width: 1200,
 		height: 800,
@@ -18,19 +18,18 @@ const createWindow = () => {
 	} else {
 		mainWindow.loadFile(path.join(__dirname, "../frontend-dist/index.html"));
 	}
+
 	mainWindow.webContents.openDevTools();
 };
 
 app.on('ready', createWindow);
-
-app.on('window-all-closed', () => {
-	if (process.platform !== 'darwin') {
-		app.quit();
-	}
-});
-
-app.on('activate', () => {
+app.on('activate', function() {
 	if (BrowserWindow.getAllWindows().length === 0) {
 		createWindow();
+	}
+});
+app.on('window-all-closed', function() {
+	if (process.platform !== 'darwin') {
+		app.quit();
 	}
 });

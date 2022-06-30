@@ -9,28 +9,34 @@
 	const tree = {
 			name: 'Documents',
 			fullPath: "/home/adityam/Documents",
+			isDirectory: true,
 			expanded: true,
 			children: [
 				{
 					name: 'README.md',
-					fullPath: "/home/adityam/Documents/README.md"
+					fullPath: "/home/adityam/Documents/README.md",
+					isDirectory: false
 				},
 				{
 					name: 'CHANGELOG.md',
-					fullPath: "/home/adityam/Documents/CHANGELOG.md"
+					fullPath: "/home/adityam/Documents/CHANGELOG.md",
+					isDirectory: false
 				},
 				{
 					name: 'src',
 					fullPath: "/home/adityam/Documents/src",
 					expanded: false,
+					isDirectory: true,
 					children: [
 						{
 							name: 'index.js',
-							fullPath: "/home/adityam/Documents/src/index.js"
+							fullPath: "/home/adityam/Documents/src/index.js",
+							isDirectory: false
 						},
 						{
 							name: 'index.css',
-							fullPath: "/home/adityam/Documents/src/index.css"
+							fullPath: "/home/adityam/Documents/src/index.css",
+							isDirectory: false
 						}
 					]
 				}
