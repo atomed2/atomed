@@ -1,0 +1,51 @@
+{
+	"applicationId": "github.atomed2.atomed",
+	"version": "0.0.1",
+	"defaultMode": "window",
+	"port": 0,
+	"documentRoot": "/www/",
+	"url": "/",
+	"enableServer": true,
+	"enableNativeAPI": true,
+	"tokenSecurity": "one-time",
+	"logging": {
+		"enabled": false,
+		"writeToLogFile": true
+	},
+	"nativeAllowList": [
+		"os.*",
+		"app.*",
+		"debug.log"
+	],
+	"globalVariables": {},
+	"modes": {
+		"window": {
+			"title": "Atom 2",
+			"width": 1200,
+			"height": 800,
+			"icon": "www/icons/appIcon.png",
+			"minWidth": 400,
+			"minHeight": 200,
+			"fullScreen": false,
+			"alwaysOnTop": false,
+			"enableInspector": true,
+			"borderless": false,
+			"maximize": false,
+			"hidden": false,
+			"resizable": true,
+			"exitProcessOnClose": true
+		},
+		"browser": {
+			"globalVariables": {},
+			"nativeBlockList": []
+		}
+	},
+	"cli": {
+		"binaryName": "atom2",
+		"resourcesPath": "/www/",
+		"extensionsPath": "/extensions/",
+		"clientLibrary": "/www/js/neutralino.js",
+		"binaryVersion": "4.6.0",
+		"clientVersion": "3.5.0"
+	}
+}
