@@ -5,7 +5,7 @@ import { svelte } from '@sveltejs/vite-plugin-svelte'
 export default defineConfig({
 	base: "./",
 	publicDir: false,
-	plugins: [svelte()],
+	plugins: [ svelte() ],
 	build: {
 		outDir: "./frontend-dist/",
 		assetsDir: "bundle",

@@ -1,17 +1,18 @@
 <script>
-	import { onMount } from 'svelte';
-
+	import { onMount, createEventDispatcher } from 'svelte';
 	export let tree;
-	export let onClick = null;
+
+	const dispatch = createEventDispatcher();
 
 	const { name, children } = tree;
 	let { expanded = true } = tree;
 
 	function clickHandler() {
 		expanded = !expanded;
-		if(!children && !!onClick) {
-			onClick(tree, expanded);
-		}
+		dispatch('itemclick', {
+			item: tree,
+			expanded: expanded
+		})
 	}
 </script>
 
@@ -21,7 +22,7 @@
 	{#if children && expanded}
 		<div class="treeview-children">
 			{#each children as child}
-				<svelte:self tree={child} onClick={onClick}/>
+				<svelte:self tree={child} on:itemclick/> <!-- Event Forwarding ~ https://svelte.dev/tutorial/event-forwarding -->
 			{/each}
 		</div>
 	{/if}

@@ -55,7 +55,7 @@
 <editor>
 	<sidebar style={`flex-basis: ${SideBarSize}px;`} id="sidebar">
 		<div class="treeview-container">
-			<TreeView tree={tree} expanded/>
+			<TreeView tree={tree} on:itemclick={(e) => console.log(e)} expanded/>
 		</div>
 	</sidebar>
 	<sidebar-resizer id="resizer" />

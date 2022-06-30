@@ -37,7 +37,7 @@
 	{/each}
 </div>
 
-<style>
+<style type="text/less">
 	.tab-panel {
 		background-color: var(--tab-panel-bg);
 		height: 1.9rem;
@@ -55,8 +55,8 @@
 		user-select: none;
 		color: var(--tab-fg);
 		background-color: var(--tab-panel-bg);
-		min-width: 10rem;
-		border-left: 2px solid var(--tab-panel-bg);
+		min-width: 13rem;
+		border-left: var(--tab-left-border-size) solid var(--tab-panel-bg);
 	}
 
 	.tab span.tab-title {
@@ -67,11 +67,14 @@
 	.tab span.tab-close {
 		margin-left: auto;
 		margin-right: 0.3rem;
-		font-size: 1.5rem;
+		width: 1rem;
+		font-size: 0.5rem;
 		color: transparent;
+		transition: 0.1s all linear;
 	}
 
 	.tab:hover span.tab-close {
+		font-size: 1.5rem;
 		color: var(--tab-close);
 	}
 
@@ -81,6 +84,6 @@
 
 	.tab.selected {
 		background-color: var(--tab-selected-bg);
-		border-left: 2px solid var(--tab-selected-border);
+		border-left: var(--tab-left-border-size) solid var(--tab-selected-border);
 	}
 </style>

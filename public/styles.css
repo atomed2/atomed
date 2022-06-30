@@ -1,5 +1,7 @@
 @import url('./normalize.css');
 
+/* #5293d8 #1fe977 #f78a46 #c00 #0098ff #17ca65 #ff4800  */
+
 :root {
 	font-size: 16px;
 
@@ -10,10 +12,11 @@
 	/* Tab Panel & Tabs */
 	--tab-fg: #E0E0E0;
 	--tab-panel-bg: #111;
-	--tab-selected-border: #00aeff;
-	--tab-selected-bg: #333;
+	--tab-selected-border: #5293d8;
+	--tab-selected-bg: #222;
 	--tab-close: #FF7070;
 	--tab-close-hover: #FF0000;
+	--tab-left-border-size: 4px;
 }
 
 body, html {
