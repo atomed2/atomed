@@ -1,10 +1,44 @@
 <script>
 	import Tabs from "./lib/Tabs.svelte";
+	import MenuBar from "./lib/MenuBar.svelte";
 	import TreeView from "./lib/TreeView.svelte";
+
+	import SettingsCMStore from './stores/SettingsCM.js';
+	import FileStore from './stores/FileStore.js';
+
+	import { OpenFile } from "./js/fileIO.js";
+	import { AddMenuItem } from "./js/menubar.js";
+	import { CreateEditor } from "./js/cm.js";
 	import { GetEditorSettings, ApplyEditorSettings } from "./js/editor.js";
-	import { onMount } from "svelte";
+	import { onMount, onDestroy } from "svelte";
 
 	var SideBarSize = 200;
+
+	var Files;
+	var currTabIndex = 0;
+	var prevTabIndex = 0;
+
+	let CodeMirrorOptions;
+	const UnSubCMOpts = SettingsCMStore.subscribe((opts) => {
+		CodeMirrorOptions = opts;
+	});
+	const UnSubFileStore = FileStore.subscribe(FilesArr => {
+		Files = FilesArr
+
+		function clamp(num, min, max) {
+			return num <= min ? min : num >= max ? max : num
+		}
+
+		prevTabIndex = currTabIndex;
+		currTabIndex = Files.length - 1;
+		prevTabIndex = clamp(prevTabIndex, 0, Files.length - 1);
+		currTabIndex = clamp(currTabIndex, 0, Files.length - 1);
+
+		if (Files.length > 0) {
+			Files[prevTabIndex].editor.getWrapperElement().style.display = "none";
+			Files[currTabIndex].editor.getWrapperElement().style.display = "";
+		}
+	})
 
 	const tree = {
 			name: 'Documents',
@@ -43,12 +77,64 @@
 			]
 	}
 
+	function onTabChange(e) {
+		prevTabIndex = e.detail.previousIndex;
+		currTabIndex = e.detail.currentIndex;
+
+		Files[prevTabIndex].editor.getWrapperElement().style.display = "none";
+		Files[currTabIndex].editor.getWrapperElement().style.display = "";
+	}
+
+	function onTabClose(e) {
+		let file = Files[e.detail.index];
+		file.editor.getWrapperElement().remove();
+
+		FileStore.update(FilesArr => {
+			FilesArr.splice(e.detail.index, 1);
+			return FilesArr;
+		})
+
+		console.log("Curr: " + currTabIndex + "\nPrev: " + prevTabIndex);
+	}
+
+	function __openFileWrapper() {
+		OpenFile()
+			.then(async function(filePath) {
+				let fileContents = await Neutralino.filesystem.readFile(filePath);
+				let editor = CreateEditor("cmArea", CodeMirrorOptions, fileContents);
+
+				let file = {
+					fileName: filePath.replace(/^.*[\\\/]/, ''),
+					filePath: filePath,
+					editor: editor
+				}
+
+				FileStore.update(FilesArr => {
+					return [...FilesArr, file];
+				})
+
+				Files[prevTabIndex].editor.getWrapperElement().style.display = "none";
+				editor.getWrapperElement().style.display = "";
+			})
+			.catch(err => {
+				console.log(err);
+			})
+	}
+
 	onMount(() => {
+		AddMenuItem({
+			label: "File",
+			submenu: [
+				{ label: "Open", click: __openFileWrapper },
+				{ label: "Save", click: function() { console.log("Save Clicked...") } },
+				{ label: "Save As", click: function() { console.log("Save As Clicked...") } }
+			]
+		});
+
 		GetEditorSettings().fontSize = 16;
 		ApplyEditorSettings();
 
 		const resize = (e) => SideBarSize = e.x;
-
 		document.getElementById("resizer")?.addEventListener("mousedown", () => {
 			document.addEventListener("mousemove", resize, false);
 			document.addEventListener("mouseup", () => {
@@ -56,25 +142,31 @@
 			}, false);
 		});
 	});
+
+	onDestroy(() => {
+		UnSubCMOpts();
+		UnSubFileStore();
+	})
 </script>
 
+<MenuBar />
 <editor>
-	<sidebar style={`flex-basis: ${SideBarSize}px;`} id="sidebar">
+	<div style={`flex-basis: ${SideBarSize}px;`} id="sidebar">
 		<div class="treeview-container">
 			<TreeView tree={tree} on:itemclick={(e) => console.log(e)} expanded/>
 		</div>
-	</sidebar>
-	<sidebar-resizer id="resizer" />
+	</div>
+	<div id="resizer"></div>
 	<workspace>
-		<Tabs />
-		<code-area></code-area>
+		<Tabs currTab={currTabIndex} on:tab-change={onTabChange} on:tab-close={onTabClose} />
+		<div id="cmArea"></div>
 		<statusbar />
 	</workspace>
 </editor>
 
 <style>
 	editor {
-		height: 100%;
+		height: calc(100% - var(--menu-height));
 		width: 100%;
 		display: flex;
 		flex-direction: row;
@@ -84,7 +176,14 @@
 		flex: 0 1 100%;
 	}
 
-	sidebar-resizer {
+	div#sidebar {}
+
+	div#cmArea {
+		width: 100%;
+		height: calc(100% - var(--menu-height) - 0.8rem); /* Little Hack To Keep CodeMirror Instances in View Without Overflow */
+	}
+
+	div#resizer {
 		padding: 0 0.2rem;
 		flex-basis: 0.1rem;
 		cursor: col-resize;

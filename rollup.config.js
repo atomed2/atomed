@@ -36,6 +36,7 @@ export default {
 		name: 'app',
 		file: 'www/build/bundle.js'
 	},
+	external: ['Neutralino'],
 	plugins: [
 		svelte({
 			compilerOptions: {

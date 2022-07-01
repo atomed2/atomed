@@ -1,46 +1,53 @@
 <script>
+	// import TabStore from '../stores/TabStore.js';
+	import FileStore from '../stores/FileStore.js';
+	import { createEventDispatcher, onDestroy } from 'svelte';
+
+	export let currTab = 0;
 	let prevTab = 0;
-	let currTab = 0;
-	let List = [
-		{
-			title: "index.html",
-			selected: true
-		},
-		{
-			title: "index.js",
-			selected: false
-		},
-		{
-			title: "styles.css",
-			selected: false
-		}
-	];
+	let Files;
+
+	const dispatch = createEventDispatcher();
+	const UnSub = FileStore.subscribe(FilesArr => {
+		Files = FilesArr;
+	});
+
+	onDestroy(() => {
+		UnSub();
+	})
 
 	function onTabClose(index) {
-		console.log("Close Requested:", index);
+		dispatch('tab-close', {
+			index: index
+		})
 	}
 
 	function onTabClick(index) {
 		prevTab = currTab;
 		currTab = index;
-		List[prevTab].selected = false;
-		List[currTab].selected = true;
+
+		dispatch('tab-change', {
+			currentIndex: currTab,
+			previousIndex: prevTab
+		})
 	}
 </script>
 
+{#if Files && Files.length > 0}
 <div class="tab-panel">
-	{#each List as tab, idx}
-		<div on:click={() => onTabClick(idx)} class={`tab${tab.selected ? " selected" : ''}`}>
-			<span class="tab-title">{tab.title}</span>
+	{#each Files as file, idx}
+		<div on:click={() => onTabClick(idx)} class={`tab${currTab == idx ? " selected" : ''}`}>
+			<span class="tab-fileName">{file.fileName}</span>
 			<span on:click={() => onTabClose(idx)} class="tab-close">×</span>
 		</div>
 	{/each}
 </div>
+{/if}
 
 <style type="text/less">
 	.tab-panel {
 		background-color: var(--tab-panel-bg);
-		height: 1.9rem;
+		height: var(--tab-panel-height);
 		display: flex;
 		flex-direction: row;
 		justify-content: flex-start;
@@ -59,7 +66,7 @@
 		border-left: var(--tab-left-border-size) solid var(--tab-panel-bg);
 	}
 
-	.tab span.tab-title {
+	.tab span.tab-fileName {
 		margin-left: auto;
 		color: var(--tab-fg);
 	}

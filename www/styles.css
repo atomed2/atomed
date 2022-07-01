@@ -2,6 +2,14 @@
 
 /* #5293d8 #1fe977 #f78a46 #c00 #0098ff #17ca65 #ff4800  */
 
+* {
+	margin: 0; padding: 0;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	white-space: nowrap;
+}
+
 :root {
 	font-size: 16px;
 
@@ -12,22 +20,30 @@
 	/* Tab Panel & Tabs */
 	--tab-fg: #E0E0E0;
 	--tab-panel-bg: #111;
+	--tab-panel-height: 1.9rem;
 	--tab-selected-border: #5293d8;
 	--tab-selected-bg: #222;
 	--tab-close: #FF7070;
 	--tab-close-hover: #FF0000;
 	--tab-left-border-size: 4px;
+
+	/* Application Menus */
+	--menu-height: 1.4rem;
+	--menu-bar-bg: #555;
+	--menu-entry-hover-bg: #333;
+	--submenu-hover-border: #444;
+	--submenu-entry-hover-bg: #222;
 }
 
 body, html {
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+
 	width: 100vw;
 	height: 100vh;
 	color: var(--fg);
+	user-select: none;
 	background-color: var(--bg);
-}
-
-#app {
-	display: block;
-	height: 100%;
-	width: 100%;
 }
