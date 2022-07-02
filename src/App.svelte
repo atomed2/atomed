@@ -11,6 +11,9 @@
 	import { CreateEditor } from "./js/cm.js";
 	import { GetEditorSettings, ApplyEditorSettings } from "./js/editor.js";
 	import { onMount, onDestroy } from "svelte";
+	import FileTypeMap from './js/FileTypeMap.js';
+
+	import DetectIndent from 'detect-indent';
 
 	var SideBarSize = 200;
 
@@ -101,6 +104,8 @@
 		OpenFile()
 			.then(async function(filePath) {
 				let fileContents = await Neutralino.filesystem.readFile(filePath);
+				// fileContents = fileContents.replace(/\t/g, '    ');
+				// console.log(fileContents);
 				let editor = CreateEditor("cmArea", CodeMirrorOptions, fileContents);
 
 				let file = {
@@ -108,6 +113,30 @@
 					filePath: filePath,
 					editor: editor
 				}
+
+				let fileExt = file.fileName.substr(file.fileName.lastIndexOf('.') + 1);
+
+				if (!fileExt || fileExt === "") { fileExt = file.fileName; }
+				fileExt = fileExt.toLowerCase();
+
+				let detectedIndent = DetectIndent(fileContents);
+				if (detectedIndent.type == undefined || detectedIndent.type == "tab") {
+					editor.setOption("indentUnit", 4);
+					editor.setOption("tabSize", 4);
+					editor.setOption("indentWithTabs", true);
+				} else {
+					if (detectedIndent.type == "space") {
+						editor.setOption("indentUnit", detectedIndent.amount);
+						editor.setOption("indentWithTabs", false);
+					}
+				}
+
+				FileTypeMap.forEach(FileType => {
+					if (FileType.extension.includes(fileExt) == true) {
+						console.log("Setting CodeMirror Mode To '" + FileType.cmMode + "'")
+						file.editor.setOption("mode", FileType.cmMode);
+					}
+				});
 
 				FileStore.update(FilesArr => {
 					return [...FilesArr, file];
@@ -121,10 +150,29 @@
 			})
 	}
 
+	function __newFile() {
+		let editor = CreateEditor("cmArea", CodeMirrorOptions, "");
+		editor.setOption("mode", "text/plain");
+
+		let file = {
+			fileName: "untitled",
+			filePath: null,
+			editor: editor
+		}
+
+		FileStore.update(FilesArr => {
+			return [...FilesArr, file]
+		})
+
+		Files[prevTabIndex].editor.getWrapperElement().style.display = "none";
+		editor.getWrapperElement().style.display = "";
+	}
+
 	onMount(() => {
 		AddMenuItem({
 			label: "File",
 			submenu: [
+				{ label: "New", click: __newFile },
 				{ label: "Open", click: __openFileWrapper },
 				{ label: "Save", click: function() { console.log("Save Clicked...") } },
 				{ label: "Save As", click: function() { console.log("Save As Clicked...") } }
