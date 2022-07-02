@@ -83,6 +83,22 @@ export function CreateEditor(id, options, initialValue = "") {
 		throw new CustomError("Unable To Create A CodeMirror Instance", "CreateEditorException");
 	}
 
+	SetEditorTheme(editor, options.theme);
 	editor.setSize("100%", "100%");
 	return editor;
+}
+
+/**
+ * Update CodeMirror Theme
+ * @param {Object} CodeMirror Instance
+ * @param {String} Editor Theme
+ * @returns {null}
+*/
+export function SetEditorTheme(editor, themeName) {
+	if (editor) {
+		let currTheme = editor.getOption("theme");
+		document.body.classList.remove(currTheme);
+		editor.setOption("theme", themeName);
+		document.body.classList.add(themeName);
+	}
 }
