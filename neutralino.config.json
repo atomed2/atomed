@@ -24,7 +24,7 @@
 			"title": "Atom 2",
 			"width": 1200,
 			"height": 800,
-			"icon": "www/icons/appIcon.png",
+			"icon": "/www/icons/appIcon.png",
 			"minWidth": 400,
 			"minHeight": 200,
 			"fullScreen": false,
