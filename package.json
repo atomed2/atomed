@@ -1,6 +1,6 @@
 {
 	"name": "atomed",
-	"version": "0.0.1",
+	"version": "0.2.1",
 	"scripts": {
 		"dev": "rollup -c -w",
 		"build": "npm run build:svelte && npm run build:neu",
