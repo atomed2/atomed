@@ -27,7 +27,7 @@ jobs:
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
         automatic_release_tag: "nightly"
-        prerelease: false
+        prerelease: true
         title: "Atom2 Nightly"
         files: |
           ./dist/atom2-release.zip
