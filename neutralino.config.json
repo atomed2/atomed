@@ -1,6 +1,6 @@
 {
 	"applicationId": "github.atomed2.atomed",
-	"version": "0.3.2",
+	"version": "dev",
 	"defaultMode": "window",
 	"port": 0,
 	"documentRoot": "/www/",
