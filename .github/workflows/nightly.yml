@@ -19,8 +19,26 @@ jobs:
     - name: Install Deps
       run: npm ci
 
+    - name: Modify Configuration For Production
+      run: node ./modifyConfig.js --disableInspector --versionFromPkgJson
+
     - name: Build
-      run: npm run build
+      run: npm run build && cd dist && mkdir zip
+
+    - name: Change & Make Directory
+      run: cd dist && mkdir zip
+
+    - name: Rename Executables
+      run: mv atom2/atom2-win_x64.exe atom2/atom2.exe
+
+    - name: Make Windows Zip
+      run: zip zip/atom2-win32 dist/atom2/atom2.exe dist/atom2/WebView2Loader.dll dist/atom2/resources.neu
+
+    - name: Make Linux Archive
+      run: tar -czvf zip/atom2-linux.tar.gz dist/atom2/atom2-linux_x64 dist/atom2/resources.neu
+
+    - name: Make MacOs Zip
+      run: zip zip/atom2-macos dist/atom2/atom2-mac_x64 dist/atom2/resources.neu
 
     - name: Update/Create Continous Release
       uses: "marvinpinto/action-automatic-releases@latest"
@@ -28,7 +46,6 @@ jobs:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
         automatic_release_tag: "nightly"
         prerelease: true
-        title: "Atom2 Nightly"
+        title: "Atom2 Nightly x64 Builds"
         files: |
-          ./dist/atom2-release.zip
-
+          ./zip/
