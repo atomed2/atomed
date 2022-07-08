@@ -94,8 +94,7 @@ export function CreateEditor(id, options, initialValue = "") {
 export function SetEditorTheme(editor, themeName) {
 	if (editor) {
 		let currTheme = editor.getOption("theme");
-		document.body.classList.remove(currTheme);
 		editor.setOption("theme", themeName);
 	}
-	document.body.classList.add(themeName);
+	document.body.className = themeName;
 }

@@ -22,10 +22,12 @@
 	var prevTabIndex = 0;
 
 	let CodeMirrorOptions;
+
 	const UnSubCMOpts = SettingsCMStore.subscribe((opts) => {
 		CodeMirrorOptions = opts;
 		SetEditorTheme(null, CodeMirrorOptions.theme);
 	});
+
 	const UnSubFileStore = FileStore.subscribe(FilesArr => {
 		Files = FilesArr
 
@@ -166,6 +168,18 @@
 		editor.getWrapperElement().style.display = "";
 	}
 
+	function __setEditorTheme(theme) {
+		SettingsCMStore.update(opts => {
+			opts.theme = theme;
+			return opts;
+		})
+
+		SetEditorTheme(null, theme); // Making Sure it is executed once
+		Files.forEach(file => {
+			SetEditorTheme(file.editor, theme);
+		})
+	}
+
 	onMount(() => {
 		AddMenuItem({
 			label: "File",
@@ -174,6 +188,14 @@
 				{ label: "Open", click: __openFileWrapper },
 				{ label: "Save", click: function() { console.log("Save Clicked...") } },
 				{ label: "Save As", click: function() { console.log("Save As Clicked...") } }
+			]
+		});
+
+		AddMenuItem({
+			label: "Theme",
+			submenu: [
+				{ label: "Dark", click: () => { __setEditorTheme("dark") } },
+				{ label: "Light", click: () => { __setEditorTheme("light") } }
 			]
 		});
 
