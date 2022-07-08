@@ -3,10 +3,7 @@ export function OpenFile() {
 		try {
 			let file = await Neutralino.os.showOpenDialog('Save your diagram', {
 				title: 'Select a file',
-				multiSelections: false,
-				filters: [
-					{ name: 'All files', extensions: ['*'] }
-				]
+				multiSelections: false
 			});
 			if (!file || !(file.length >= 0)) {
 				throw new Error("User did not select any file.");
