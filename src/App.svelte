@@ -46,42 +46,43 @@
 		}
 	})
 
-	const tree = {
-			name: 'Documents',
-			fullPath: "/home/adityam/Documents",
-			isDirectory: true,
-			expanded: true,
-			children: [
-				{
-					name: 'README.md',
-					fullPath: "/home/adityam/Documents/README.md",
-					isDirectory: false
-				},
-				{
-					name: 'CHANGELOG.md',
-					fullPath: "/home/adityam/Documents/CHANGELOG.md",
-					isDirectory: false
-				},
-				{
-					name: 'src',
-					fullPath: "/home/adityam/Documents/src",
-					expanded: false,
-					isDirectory: true,
-					children: [
-						{
-							name: 'index.js',
-							fullPath: "/home/adityam/Documents/src/index.js",
-							isDirectory: false
-						},
-						{
-							name: 'index.css',
-							fullPath: "/home/adityam/Documents/src/index.css",
-							isDirectory: false
-						}
-					]
-				}
-			]
-	}
+	var reRenderTreeView = 0; // Change To Anything To Re-Render
+	var tree = {};// = {
+	// 		name: 'Documents',
+	// 		fullPath: "/home/adityam/Documents",
+	// 		isDirectory: true,
+	// 		expanded: true,
+	// 		children: [
+	// 			{
+	// 				name: 'README.md',
+	// 				fullPath: "/home/adityam/Documents/README.md",
+	// 				isDirectory: false
+	// 			},
+	// 			{
+	// 				name: 'CHANGELOG.md',
+	// 				fullPath: "/home/adityam/Documents/CHANGELOG.md",
+	// 				isDirectory: false
+	// 			},
+	// 			{
+	// 				name: 'src',
+	// 				fullPath: "/home/adityam/Documents/src",
+	// 				expanded: false,
+	// 				isDirectory: true,
+	// 				children: [
+	// 					{
+	// 						name: 'index.js',
+	// 						fullPath: "/home/adityam/Documents/src/index.js",
+	// 						isDirectory: false
+	// 					},
+	// 					{
+	// 						name: 'index.css',
+	// 						fullPath: "/home/adityam/Documents/src/index.css",
+	// 						isDirectory: false
+	// 					}
+	// 				]
+	// 			}
+	// 		]
+	// }
 
 	function onTabChange(e) {
 		prevTabIndex = e.detail.previousIndex;
@@ -103,49 +104,51 @@
 		console.log("Curr: " + currTabIndex + "\nPrev: " + prevTabIndex);
 	}
 
+	async function __openFileToEditor(filePath) {
+		let fileContents = await Neutralino.filesystem.readFile(filePath);
+		let editor = CreateEditor("cmArea", CodeMirrorOptions, fileContents);
+
+		let file = {
+			fileName: filePath.replace(/^.*[\\\/]/, ''),
+			filePath: filePath,
+			editor: editor
+		}
+
+		let fileExt = file.fileName.substr(file.fileName.lastIndexOf('.') + 1);
+
+		if (!fileExt || fileExt === "") { fileExt = file.fileName; }
+		fileExt = fileExt.toLowerCase();
+
+		let detectedIndent = DetectIndent(fileContents);
+		if (detectedIndent.type == undefined || detectedIndent.type == "tab") {
+			editor.setOption("indentUnit", 4);
+			editor.setOption("tabSize", 4);
+			editor.setOption("indentWithTabs", true);
+		} else {
+			if (detectedIndent.type == "space") {
+				editor.setOption("indentUnit", detectedIndent.amount);
+				editor.setOption("indentWithTabs", false);
+			}
+		}
+
+		FileTypeMap.forEach(FileType => {
+			if (FileType.extension.includes(fileExt) == true) {
+				console.log("Setting CodeMirror Mode To '" + FileType.cmMode + "'")
+				file.editor.setOption("mode", FileType.cmMode);
+			}
+		});
+
+		FileStore.update(FilesArr => {
+			return [...FilesArr, file];
+		})
+
+		Files[prevTabIndex].editor.getWrapperElement().style.display = "none";
+		editor.getWrapperElement().style.display = "";
+	}
+
 	function __openFileWrapper() {
 		OpenFile()
-			.then(async function(filePath) {
-				let fileContents = await Neutralino.filesystem.readFile(filePath);
-				let editor = CreateEditor("cmArea", CodeMirrorOptions, fileContents);
-
-				let file = {
-					fileName: filePath.replace(/^.*[\\\/]/, ''),
-					filePath: filePath,
-					editor: editor
-				}
-
-				let fileExt = file.fileName.substr(file.fileName.lastIndexOf('.') + 1);
-
-				if (!fileExt || fileExt === "") { fileExt = file.fileName; }
-				fileExt = fileExt.toLowerCase();
-
-				let detectedIndent = DetectIndent(fileContents);
-				if (detectedIndent.type == undefined || detectedIndent.type == "tab") {
-					editor.setOption("indentUnit", 4);
-					editor.setOption("tabSize", 4);
-					editor.setOption("indentWithTabs", true);
-				} else {
-					if (detectedIndent.type == "space") {
-						editor.setOption("indentUnit", detectedIndent.amount);
-						editor.setOption("indentWithTabs", false);
-					}
-				}
-
-				FileTypeMap.forEach(FileType => {
-					if (FileType.extension.includes(fileExt) == true) {
-						console.log("Setting CodeMirror Mode To '" + FileType.cmMode + "'")
-						file.editor.setOption("mode", FileType.cmMode);
-					}
-				});
-
-				FileStore.update(FilesArr => {
-					return [...FilesArr, file];
-				})
-
-				Files[prevTabIndex].editor.getWrapperElement().style.display = "none";
-				editor.getWrapperElement().style.display = "";
-			})
+			.then(__openFileToEditor)
 			.catch(err => {
 				console.log(err);
 			})
@@ -180,7 +183,53 @@
 		})
 	}
 
-	onMount(() => {
+	function reRenderTV() {
+		reRenderTreeView > 5 ? reRenderTreeView = 0 : reRenderTreeView++
+	}
+
+	// Convert Neutralino Folder Content Array To TreeView Object
+	function __neuArrToTreeObj(parent, folderContents) {
+		folderContents.forEach(item => {
+			if (item.entry == "." || item.entry == "..") return;
+			parent.children.push({
+				name: item.entry,
+				fullPath: parent.fullPath + "/" + item.entry,
+				isDirectory: item.type == "DIRECTORY",
+				children: item.type == "DIRECTORY" ? [] : null
+			});
+		});
+	}
+
+	async function __treeViewItemClick(e) {
+		let itemClicked = e.detail.item;
+
+		if (!itemClicked.isDirectory) {
+			await __openFileToEditor(itemClicked.fullPath);
+		} else if (!itemClicked.children || itemClicked.children.length == 0) {
+			itemClicked.children = [];
+
+			let folderContents = await Neutralino.filesystem.readDirectory(itemClicked.fullPath);
+			__neuArrToTreeObj(itemClicked, folderContents);
+
+			reRenderTV();
+		}
+	}
+
+	onMount(async () => {
+		const docPath = await Neutralino.os.getPath("documents");
+		const folderContents = await Neutralino.filesystem.readDirectory(docPath);
+		tree = {
+			name: docPath.match(/([^\/]*)\/*$/)[1], // Get Last Segment From The Path
+			fullPath: docPath,
+			isDirectory: true,
+			expanded: true,
+			children: []
+		}
+
+		__neuArrToTreeObj(tree, folderContents);
+
+		reRenderTV();
+
 		AddMenuItem({
 			label: "File",
 			submenu: [
@@ -220,9 +269,11 @@
 <MenuBar />
 <editor>
 	<div style={`flex-basis: ${SideBarSize}px;`} id="sidebar">
-		<div class="treeview-container">
-			<TreeView tree={tree} on:itemclick={(e) => console.log(e)} expanded/>
-		</div>
+		{#key reRenderTreeView}
+			<div class="treeview-container">
+				<TreeView tree={tree} on:itemclick={__treeViewItemClick} expanded/>
+			</div>
+		{/key}
 	</div>
 	<div id="resizer"></div>
 	<workspace>
