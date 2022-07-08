@@ -25,7 +25,6 @@ import "codemirror/mode/shell/shell"; // Shell Scripts
 import "codemirror/mode/python/python"; // Python, Cython
 import "codemirror/mode/rust/rust"; // Rust
 import "codemirror/mode/jsx/jsx"; // JSX, TSX
-// import "./mode/makefile.js"; // Makefile
 import "codemirror/mode/yaml/yaml"; // Yaml
 import "codemirror/mode/yaml-frontmatter/yaml-frontmatter"; // Yaml Frontmatter
 import "codemirror/mode/lua/lua"; // Lua
@@ -33,6 +32,7 @@ import "codemirror/mode/markdown/markdown"; // Markdown
 import "codemirror/mode/gfm/gfm"; // GitHub Flavor For Markdown
 import "codemirror/mode/dart/dart"; // Dart
 import "codemirror-mode-svelte"; // Svelte
+import "codemirror-mode-makefile"; // Makefile
 
 import "../../node_modules/codemirror/lib/codemirror.css"; // Default Theme
 
