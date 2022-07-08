@@ -104,8 +104,6 @@
 		OpenFile()
 			.then(async function(filePath) {
 				let fileContents = await Neutralino.filesystem.readFile(filePath);
-				// fileContents = fileContents.replace(/\t/g, '    ');
-				// console.log(fileContents);
 				let editor = CreateEditor("cmArea", CodeMirrorOptions, fileContents);
 
 				let file = {
@@ -152,7 +150,6 @@
 
 	function __newFile() {
 		let editor = CreateEditor("cmArea", CodeMirrorOptions, "");
-		editor.setOption("mode", "text/plain");
 
 		let file = {
 			fileName: "untitled",

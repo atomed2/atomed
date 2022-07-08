@@ -7,7 +7,6 @@ import "codemirror/addon/edit/closebrackets";
 import "codemirror/addon/edit/matchbrackets";
 
 // Misc Addons
-import "codemirror/addon/display/placeholder";
 import "codemirror/addon/selection/active-line";
 
 import "codemirror/mode/javascript/javascript.js"; // JavaScript, TypeScript, JSON
@@ -34,7 +33,7 @@ import "codemirror/mode/dart/dart"; // Dart
 import "codemirror-mode-svelte"; // Svelte
 import "codemirror-mode-makefile"; // Makefile
 
-import "../../node_modules/codemirror/lib/codemirror.css"; // Default Theme
+import "codemirror/lib/codemirror.css"; // Default Theme
 
 function CustomError(errorText, errorName) {
 	this.name = errorName;
@@ -50,7 +49,6 @@ function CustomError(errorText, errorName) {
  * @param {Number} options.indent.size Indent Size
  * @param {Boolean} options.indent.tabs To Use Tabs or Not
  * @param {String} options.mode Editor Mode
- * @param {String} options.placeholder Editor PlaceHolder When Empty
  * @param {Boolean} options.lineNumbers To Show Line Numbers or Not
  * @param {Object} options.extraKeys Object containing shortcut & function to call
  * @param {String} initialValue Initial Editor Value
@@ -69,7 +67,6 @@ export function CreateEditor(id, options, initialValue = "") {
 		indentUnit:        options.indent.size,
 		tabSize:           options.indent.size,
 		indentWithTabs:    options.indent.tabs,
-		placeholder:       options.placeholder,
 		mode:              options.mode,
 		extraKeys:         options.extraKeys,
 		autofocus:         true,

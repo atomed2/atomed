@@ -1,13 +1,12 @@
 import { writable } from 'svelte/store';
 
 const SettingsCM = writable({
-	theme: "default-dark",
+	theme: "dark",
 	indent: {
 		size: 4,
 		tabs: true
 	},
-	mode: "javascript",
-	placeholder: "",
+	mode: "text/plain",
 	lineNumbers: true,
 	extraKeys: {}
 });
