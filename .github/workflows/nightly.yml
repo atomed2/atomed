@@ -23,22 +23,16 @@ jobs:
       run: node ./modifyConfig.js --disableInspector --versionFromPkgJson
 
     - name: Build
-      run: npm run build && cd dist && mkdir zip
-
-    - name: Change & Make Directory
-      run: cd dist && mkdir zip
-
-    - name: Rename Executables
-      run: mv atom2/atom2-win_x64.exe atom2/atom2.exe
+      run: npm run build
 
     - name: Make Windows Zip
-      run: zip zip/atom2-win32 dist/atom2/atom2.exe dist/atom2/WebView2Loader.dll dist/atom2/resources.neu
+      run: zip dist/atom2-win32 dist/win32/x64/atom2.exe dist/win32/x64/WebView2Loader.dll dist/win32/x64/resources.neu
 
     - name: Make Linux Archive
-      run: tar -czvf zip/atom2-linux.tar.gz dist/atom2/atom2-linux_x64 dist/atom2/resources.neu
+      run: tar -czvf dist/atom2-linux.tar.gz dist/linux/x64/atom2 dist/linux/x64/resources.neu
 
-    - name: Make MacOs Zip
-      run: zip zip/atom2-macos dist/atom2/atom2-mac_x64 dist/atom2/resources.neu
+    - name: Make Darwin Zip
+      run: zip dist/atom2-darwin dist/darwin/x64/atom2.exe dist/darwin/x64/resources.neu
 
     - name: Update/Create Continous Release
       uses: "marvinpinto/action-automatic-releases@latest"
@@ -46,6 +40,8 @@ jobs:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
         automatic_release_tag: "nightly"
         prerelease: true
-        title: "Atom2 Nightly x64 Builds"
+        title: "Atom2 Nightly x64"
         files: |
-          ./zip/
+          ./dist/atom2-linux.tar.gz
+          ./dist/atom2-win32.zip
+          ./dist/atom2-darwin.zip
