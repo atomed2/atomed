@@ -96,6 +96,6 @@ export function SetEditorTheme(editor, themeName) {
 		let currTheme = editor.getOption("theme");
 		document.body.classList.remove(currTheme);
 		editor.setOption("theme", themeName);
-		document.body.classList.add(themeName);
 	}
+	document.body.classList.add(themeName);
 }

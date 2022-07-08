@@ -8,7 +8,7 @@
 
 	import { OpenFile } from "./js/fileIO.js";
 	import { AddMenuItem } from "./js/menubar.js";
-	import { CreateEditor } from "./js/cm.js";
+	import { CreateEditor, SetEditorTheme } from "./js/cm.js";
 	import { GetEditorSettings, ApplyEditorSettings } from "./js/editor.js";
 	import { onMount, onDestroy } from "svelte";
 	import FileTypeMap from './js/FileTypeMap.js';
@@ -24,6 +24,7 @@
 	let CodeMirrorOptions;
 	const UnSubCMOpts = SettingsCMStore.subscribe((opts) => {
 		CodeMirrorOptions = opts;
+		SetEditorTheme(null, CodeMirrorOptions.theme);
 	});
 	const UnSubFileStore = FileStore.subscribe(FilesArr => {
 		Files = FilesArr
