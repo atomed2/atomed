@@ -37,10 +37,13 @@
 	}
 
 	div.treeview-name:hover {
-		background-color: #333;
+		color: var(--treeview-item-hover-fg);
+		background-color: var(--treeview-item-hover-bg);
 	}
 
 	div.treeview-name {
+		color: var(--treeview-item-fg);
+		background-color: var(--treeview-item-bg);
 		cursor: pointer;
 		border-radius: 5px;
 		padding: 5px 6px;

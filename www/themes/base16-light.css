@@ -3,13 +3,32 @@
 */
 
 body.light {
-	--fg: #20201f;
-	--fg1: #464542;
-	--fg2: #75746d;
+	/* Normal Colors */
+	--fg: #222;
+	--bg: #EFEFEF;
 
-	--bg: #E7E7E7;
-	--bg1: #CCC;
-	--bg2: #A9A9A9;
+	/* Tab Panel & Tabs */
+	--tab-fg: #222;
+	--tab-panel-bg: #BBB;
+	--tab-panel-height: 1.9rem;
+	--tab-selected-border: #5293d8;
+	--tab-selected-bg: #E0E0E0;
+	--tab-close: #FF7070;
+	--tab-close-hover: #FF0000;
+	--tab-left-border-size: 4px;
+
+	/* Application Menus */
+	--menu-height: 1.4rem;
+	--menu-bar-bg: #CCC;
+	--menu-entry-hover-bg: #DDD;
+	--submenu-hover-border: #BBB;
+	--submenu-entry-hover-bg: #BBB;
+
+	/* SideBar TreeView  */
+	--treeview-item-fg: #222;
+	--treeview-item-bg: inherit;
+	--treeview-item-hover-fg: inherit;
+	--treeview-item-hover-bg: #DEDEDE;
 }
 
 .cm-s-light.CodeMirror {

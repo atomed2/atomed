@@ -33,6 +33,12 @@
 	--menu-entry-hover-bg: #333;
 	--submenu-hover-border: #444;
 	--submenu-entry-hover-bg: #222;
+
+	/* SideBar TreeView  */
+	--treeview-item-fg: #E8E8E8;
+	--treeview-item-bg: inherit;
+	--treeview-item-hover-fg: inherit;
+	--treeview-item-hover-bg: #333;
 }
 
 body, html {
